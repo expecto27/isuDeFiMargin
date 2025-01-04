@@ -1,8 +1,8 @@
 <template>
     <div id="app">
       <nav>
-        <router-link class="item" to="/main">Main</router-link>
-        <router-link class="item" to="/margin">Margin</router-link>
+        <router-link class="item link" to="/main">Main</router-link>
+        <router-link class="item link" to="/margin">Margin</router-link>
       </nav>
     </div>
   </template>
@@ -20,6 +20,9 @@
   
   <style>
     .item {
-      margin-right: 5px;
+      margin-right: 15px;
+    }
+    .h1{
+        align-items:center;
     }
   </style>

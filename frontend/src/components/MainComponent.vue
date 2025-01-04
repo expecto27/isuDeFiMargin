@@ -1,18 +1,15 @@
-<template>
-    <h1>MAIN PAGE APPLICATION</h1>
+<template >
+    <h1>MAIN PAGE</h1>
 </template>
-  
-  <script>
-      export default {
-          name: "MainComponent",
-          data() {
-              return {
-  
-              };
-          }
-      };
-  </script>
-  
-  <style>
-    
-  </style>
+
+<script>
+    export default {
+        name: "MarginComponent",
+        data() {
+            return {};
+        }
+    };
+</script>
+
+<style scoped>
+</style>
