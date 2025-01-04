@@ -1,13 +1,13 @@
 import { createWebHistory, createRouter } from "vue-router";
-import MarginComponent from "./components/MarginComponent.vue";
+import TokenSwap from "./components/TokenSwap.vue";
 import MainComponent from "./components/MainComponent.vue";
 
 const routes = [
     {
-        path: "/margin",
-        name: "margin", 
-        alias: "/margin",
-        component: MarginComponent,
+        path: "/swap",
+        name: "TokenSwap", 
+        alias: "/tokenswap",
+        component: TokenSwap,
         meta: {
             title: "Margin"
         }

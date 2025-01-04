@@ -1,10 +1,10 @@
 <template>
-  <h1>MARGIN PAGE</h1>
+  <h1>TOKEN SWAP PAGE</h1>
 </template>
   
   <script>
       export default {
-          name: "MarginComponent",
+          name: "TokenSwap",
           data() {
               return {
   
