@@ -4,6 +4,7 @@
         <img src="./../assets/logo.png" alt="Logo" class="logo" />
         <router-link class="item link" to="/main">Main</router-link>
         <router-link class="item link" to="/swap">TokenSwap</router-link>
+        <router-link class="item link" to="/profile">Profile</router-link>
       </nav>
     </div>
   </template>

@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import TokenSwap from "./components/TokenSwap.vue";
 import MainComponent from "./components/MainComponent.vue";
+import ProfileComponent from "./components/ProfileComponent.vue";
 
 const routes = [
     {
@@ -17,6 +18,15 @@ const routes = [
         name: "main", 
         alias: "/main",
         component: MainComponent,
+        meta: {
+            title: "Main"
+        }
+    },
+    {
+        path: "/profile",
+        name: "profileComponent", 
+        alias: "/profile",
+        component: ProfileComponent,
         meta: {
             title: "Main"
         }
