@@ -1,134 +1,91 @@
+
 <template>
-  <div>
-    <h1>Uniswap Trade</h1>
-    <form @submit.prevent="swap">
-      <label for="fromToken">Из:</label>
-      <select v-model="fromToken">
-        <option value="WETH">WETH</option>
-        <option value="WBTC">WBTC</option>
-        <option value="USDC">USDC</option>
-      </select>
-
-      <label for="toToken">В:</label>
-      <select v-model="toToken">
-        <option value="WETH">WETH</option>
-        <option value="WBTC">WBTC</option>
-        <option value="USDC">USDC</option>
-      </select>
-
-      <label for="amount">Сумма:</label>
-      <input type="number" v-model="amount" />
-
-      <button @click="swap">Обменять</button>
-    </form>
-
-    <div v-if="userAddress">
-      <p>Ваш адрес: {{ userAddress }}</p>
-    </div>
-
-    <div v-else>
-      <button @click="connectWallet">Подключить кошелек</button>
-    </div>
-
-    <!-- Add this section to show the address or button at the bottom of the page -->
-    <div class="footer">
-      <p v-if="userAddress">Ваш адрес: {{ userAddress }}</p>
-      <p v-else>Пожалуйста, подключите ваш кошелек для продолжения.</p>
+  <div id="app">
+    <div class="uniswap-container">
+      <uniswap-vue
+      :uniswapDappSharedLogicContext="uniswapDappSharedLogicContext"
+      v-if="uniswapDappSharedLogicContext"
+    />
     </div>
   </div>
 </template>
-
 <script>
-import { ethers } from 'ethers';
+import { ChainId, ETH } from 'uniswap-dapp-integration-shared'
 
 export default {
-  data() {
+  name: 'App',
+  data () {
     return {
-      fromToken: 'WETH',
-      toToken: 'USDC',
-      amount: 0,
-      userAddress: null,
-      provider: null,
-      signer: null,
-      connected: false,
-      contractResult: ''
-    };
-  },
-  created() {
-    // Check if the user is already authorized from localStorage
-    const isAuthorized = JSON.parse(localStorage.getItem('isAuthorized'));
-    if (isAuthorized) {
-      this.connectWallet(true); // If authorized, connect the wallet and get the address/balance
+      uniswapDappSharedLogicContext: undefined
     }
   },
-  methods: {
-    async connectWallet(fromLocalStorage = false) {
-      if (window.ethereum) { // first we check if metamask is installed
-        try {
-          if (!fromLocalStorage) {
-            // Request the user's accounts only if not from localStorage
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            this.userAddress = accounts[0]; // Get the first account
-            this.connected = true; // Mark wallet as connected
+  async mounted () {
+    const addresses = await window.ethereum.request({
+      method: 'eth_requestAccounts'
+    })
 
-            // Save the authorization state in localStorage
-            localStorage.setItem('isAuthorized', true);
-          } else {
-            // If user is authorized, get the address and balance
-            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-            this.userAddress = accounts[0]; // Get the first account
-          }
-
-          // Initialize provider and signer
-          this.provider = new ethers.providers.Web3Provider(window.ethereum);
-          this.signer = this.provider.getSigner();
-
-          // Get balance and display it
-          const balanceWei = await this.provider.getBalance(this.userAddress);
-          this.balance = ethers.utils.formatEther(balanceWei);
-        } catch (error) {
-          console.error('Ошибка при подключении:', error);
+    this.uniswapDappSharedLogicContext = {
+      supportedNetworkTokens: [
+        {
+          chainId: ChainId.MAINNET,
+          defaultInputValue: '0.000001',
+          defaultInputToken: ETH.MAINNET().contractAddress,
+          defaultOutputToken: '0xde30da39c46104798bb5aa3fe8b9e0e1f348163f',
+          supportedTokens: [
+            { contractAddress: ETH.MAINNET().contractAddress },
+            { contractAddress: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984' },
+            { contractAddress: '0xdac17f958d2ee523a2206206994597c13d831ec7' },
+            { contractAddress: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9' },
+            { contractAddress: '0xde30da39c46104798bb5aa3fe8b9e0e1f348163f' }
+          ]
+        },
+        {
+          chainId: ChainId.RINKEBY,
+          defaultInputToken: ETH.RINKEBY().contractAddress,
+          defaultOutputToken: '0xef0e839cf88e47be676e72d5a9cb6ced99fad1cf',
+          supportedTokens: [
+            { contractAddress: ETH.RINKEBY().contractAddress },
+            { contractAddress: '0xef0e839cf88e47be676e72d5a9cb6ced99fad1cf' }
+          ]
         }
-      } else {
-        alert('Пожалуйста, установите MetaMask!');
-      }
-    },
-
-    async swap() {
-      if (!this.userAddress) {
-        alert('Пожалуйста, подключите ваш кошелек!');
-        return;
-      }
-
-      try {
-        // Передаем signer в функцию swapTokens
-        const tx = await swapTokens(this.amount, this.fromToken, this.toToken, this.userAddress, this.signer);
-        console.log('Transaction:', tx);
-      } catch (error) {
-        console.error('Ошибка:', error.message);
-      }
+      ],
+      ethereumAddress: addresses[0],
+      ethereumProvider: window.ethereum
     }
   }
-};
+}
 </script>
 
 <style>
-.component {
-  font-family: 'JetBrains Mono', Avenir, Helvetica, Arial, sans-serif;
-  background-color: #2b2b2b;
-  color: #e1e1e1;
-  min-height: 100%;
-}
-
-.footer {
-  position: fixed;
-  bottom: 20px;
+#app {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  text-align: center;
-  color: #e1e1e1;
+  -webkit-box-align: center;
+  align-items: center;
+  flex: 1 1 0%;
+  z-index: 1;
 }
 
-button {
-  margin-top: 20px;
+.uniswap-container {
+  position: relative;
+  top: 100px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px,
+    rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px;
+  border-radius: 24px;
+  margin-top: 1rem;
+}
+
+.button {
+  position: absolute;
+  top: 40px;
+  box-shadow: rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px,
+    rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px;
+  padding: 4px 12px;
+  border-radius: 24px;
+  background-color: black;
+  color: white;
 }
 </style>
