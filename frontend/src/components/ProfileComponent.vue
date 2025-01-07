@@ -29,18 +29,19 @@ export default {
   methods: {
     async checkWalletConnection() {
       const isAuthorized = JSON.parse(localStorage.getItem('isAuthorized'));
-      if (isAuthorized) {
-        // If the user is authorized, check for the current address and balance
+      const storedAddress = localStorage.getItem('userAddress');
+      if (isAuthorized && storedAddress) {
         try {
           if (window.ethereum) {
             const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-            if (accounts.length > 0) {
-              this.userAddress = accounts[0];
+            if (accounts.includes(storedAddress)) {
+              this.userAddress = storedAddress;
               this.connected = true;
 
               this.provider = new ethers.providers.Web3Provider(window.ethereum);
               this.signer = this.provider.getSigner();
-
+            } else {
+              this.disconnectWallet();
             }
           }
         } catch (error) {
@@ -52,18 +53,18 @@ export default {
     async connectWallet() {
       if (window.ethereum) {
         try {
-          // Request the user's accounts
           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          this.userAddress = accounts[0]; // Get the first account
-          this.connected = true; // Mark wallet as connected
+          const userAddress = accounts[0];
 
-          // Save the authorization state in localStorage
+          // Сохраняем адрес кошелька и статус авторизации
+          this.userAddress = userAddress;
+          this.connected = true;
           localStorage.setItem('isAuthorized', JSON.stringify(true));
+          localStorage.setItem('userAddress', userAddress);
 
-          // Initialize provider and signer
+          // Инициализируем провайдер и signer
           this.provider = new ethers.providers.Web3Provider(window.ethereum);
           this.signer = this.provider.getSigner();
-
         } catch (error) {
           console.error('Ошибка при подключении:', error);
         }
@@ -73,8 +74,9 @@ export default {
     },
 
     disconnectWallet() {
-      // Remove the authorization flag and reset state
+      // Удаляем данные из localStorage и сбрасываем состояние
       localStorage.removeItem('isAuthorized');
+      localStorage.removeItem('userAddress');
       this.userAddress = null;
       this.balance = null;
       this.connected = false;
