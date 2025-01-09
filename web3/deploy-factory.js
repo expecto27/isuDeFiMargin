@@ -3,7 +3,7 @@ const fs = require("fs");
 
 // Подключаемся к Ganache
 const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:7545");
-const wallet = new ethers.Wallet("0x90a173470053d7651028de40a54d4b8f075fe48b20669a5db1cf03716b3465f0", provider); // Замените на свой приватный ключ
+const wallet = new ethers.Wallet("0xa4a127096e1806a340e1bbef88fdc4df894a6261e58652a4c16722a9695021df", provider); // Замените на свой приватный ключ
 
 // Загрузка ABI и байткода контракта Factory
 const factoryAbi = JSON.parse(fs.readFileSync("./build/contracts/UniswapV2Factory.json")).abi;
@@ -19,4 +19,4 @@ async function deployFactory() {
 
 deployFactory().catch(console.error);
 
-//factory 0xc4815a4713bf97374B3De110647174EF55a17372
+//factory 0xA6621560131F7Fba96790cD7C92B8ADbECC69F90

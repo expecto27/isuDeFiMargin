@@ -3,7 +3,7 @@ const fs = require("fs");
 
 // Подключаемся к Ganache
 const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:7545");
-const wallet = new ethers.Wallet("0x90a173470053d7651028de40a54d4b8f075fe48b20669a5db1cf03716b3465f0", provider); // Замените на свой приватный ключ
+const wallet = new ethers.Wallet("0xa4a127096e1806a340e1bbef88fdc4df894a6261e58652a4c16722a9695021df", provider); // Замените на свой приватный ключ
 
 
 const routerAbi = JSON.parse(fs.readFileSync("./build/contracts/UniswapV2Router02.json")).abi;
@@ -17,7 +17,7 @@ async function deployRouter(factoryAddress, wethAddress) {
     console.log("Router развернут по адресу:", router.address);
 }
 
-deployRouter("0xc4815a4713bf97374B3De110647174EF55a17372", "0x07AbFfD47b9D8AE62f06834282EAD22e8634B6d6").catch(console.error);
+deployRouter("0xA6621560131F7Fba96790cD7C92B8ADbECC69F90", "0x8b9be2CF5d272De98202DEBd74b0f9148E863bA9").catch(console.error);
 
 
-//router 0x2BF545E292e5740e6bbFc3A31bf208dc7929fE55
+//router 0x2D17619B62abF4f967dD619c68eDa26D02F9353d

@@ -1,9 +1,10 @@
 {
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.3",
+    "@openzeppelin/contracts": "^4.4.0",
     "@uniswap/v2-core": "^1.0.1",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "dotenv": "^16.4.7",
-    "ethers": "^5.4"
+    "ethers": "^5.4",
+    "uws": "^200.0.0"
   }
 }
